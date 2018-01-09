@@ -21,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
@@ -32,26 +34,31 @@ public class AnagramDictionary {
     private static final int MAX_WORD_LENGTH = 7;
     private Random random = new Random();
     private ArrayList<String> wordList;
+    private HashSet<String> wordSet;
+
 
     public AnagramDictionary(Reader reader) throws IOException {
         BufferedReader in = new BufferedReader(reader);
+        wordSet = new HashSet<String>();
+        //lettersToWord = new HashMap<String, ArrayList<String>>();
         wordList = new ArrayList<String>();
         String line;
         while((line = in.readLine()) != null) {
             String word = line.trim();
             wordList.add(word);
+            wordSet.add(word);
         }
     }
 
     public boolean isGoodWord(String word, String base) {
-        return true;
+        return wordSet.contains(word) && wordSet.contains(base);
     }
 
     public List<String> getAnagrams(String targetWord) {
         ArrayList<String> result = new ArrayList<String>();
-        for(int i = 1; i < wordList.size(); i++){
+        for(int i = 0; i < wordList.size(); i++){
             if(sortLetters(targetWord).equals(sortLetters(wordList.get(i)))){
-                result.add(targetWord);
+                result.add(wordList.get(i));
             }
         }
         return result;
@@ -60,8 +67,6 @@ public class AnagramDictionary {
     public String sortLetters(String abc){
         char[] abcArray = abc.toCharArray();
         Arrays.sort(abcArray);
-
-        //Log.d("test", "sorted" + abcArray);
         return Arrays.toString(abcArray);
     }
 
@@ -71,7 +76,6 @@ public class AnagramDictionary {
     }
 
     public String pickGoodStarterWord() {
-        return "skate";
-        //return "stop";
+        return "stop";
     }
 }

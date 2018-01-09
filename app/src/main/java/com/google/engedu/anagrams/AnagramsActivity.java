@@ -37,6 +37,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -46,10 +48,12 @@ public class AnagramsActivity extends AppCompatActivity {
     private AnagramDictionary dictionary;
     private String currentWord;
     private List<String> anagrams;
+    private HashMap<String, ArrayList<String>> lettersToWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lettersToWord = new HashMap<String, ArrayList<String>>();
         setContentView(R.layout.activity_anagrams);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,6 +90,16 @@ public class AnagramsActivity extends AppCompatActivity {
             return;
         }
         String color = "#cc0029";
+        String sortedWord = dictionary.sortLetters(word);
+        if(lettersToWord.containsKey(sortedWord)){
+            ArrayList<String> currentList = lettersToWord.get(sortedWord);
+            currentList.add(word);
+        }
+        else{
+            ArrayList<String> newList = new ArrayList<>();
+            newList.add(word);
+            lettersToWord.put(sortedWord, newList);
+        }
         if (dictionary.isGoodWord(word, currentWord) && anagrams.contains(word)) {
             anagrams.remove(word);
             color = "#00aa29";
