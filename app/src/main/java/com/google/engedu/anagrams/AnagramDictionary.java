@@ -35,18 +35,29 @@ public class AnagramDictionary {
     private Random random = new Random();
     private ArrayList<String> wordList;
     private HashSet<String> wordSet;
+    private HashMap<String, ArrayList<String>> lettersToWord;
 
 
     public AnagramDictionary(Reader reader) throws IOException {
         BufferedReader in = new BufferedReader(reader);
         wordSet = new HashSet<String>();
-        //lettersToWord = new HashMap<String, ArrayList<String>>();
+        lettersToWord = new HashMap<String, ArrayList<String>>();
         wordList = new ArrayList<String>();
         String line;
         while((line = in.readLine()) != null) {
             String word = line.trim();
             wordList.add(word);
             wordSet.add(word);
+            String sortedWord = sortLetters(word);
+            if(lettersToWord.containsKey(sortedWord)){
+                ArrayList<String> currentList = lettersToWord.get(sortedWord);
+                currentList.add(word);
+            }
+            else{
+                ArrayList<String> newList = new ArrayList<>();
+                newList.add(word);
+                lettersToWord.put(sortedWord, newList);
+            }
         }
     }
 
@@ -55,13 +66,7 @@ public class AnagramDictionary {
     }
 
     public List<String> getAnagrams(String targetWord) {
-        ArrayList<String> result = new ArrayList<String>();
-        for(int i = 0; i < wordList.size(); i++){
-            if(sortLetters(targetWord).equals(sortLetters(wordList.get(i)))){
-                result.add(wordList.get(i));
-            }
-        }
-        return result;
+        return lettersToWord.get(sortLetters(targetWord));
     }
 
     public String sortLetters(String abc){
