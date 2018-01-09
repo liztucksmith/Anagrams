@@ -62,7 +62,7 @@ public class AnagramDictionary {
     }
 
     public boolean isGoodWord(String word, String base) {
-        return wordSet.contains(word) && wordSet.contains(base);
+        return wordSet.contains(word) && word.indexOf(base) < 0;
     }
 
     public List<String> getAnagrams(String targetWord) {
@@ -77,6 +77,14 @@ public class AnagramDictionary {
 
     public List<String> getAnagramsWithOneMoreLetter(String word) {
         ArrayList<String> result = new ArrayList<String>();
+        for(char alp = 'a'; alp <= 'z'; alp++){
+            String currentWord = word + Character.toString(alp);
+            List anagrams = getAnagrams(currentWord);
+            if(anagrams!=null){
+                result.addAll(getAnagrams(currentWord));
+            }
+        }
+
         return result;
     }
 
